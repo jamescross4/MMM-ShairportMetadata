@@ -12,7 +12,8 @@ Module.register("MMM-ShairportMetadata",{
 	// Module config defaults.
 	defaults: {
 		metadataPipe: "/tmp/shairport-sync-metadata",
-		alignment: "center"
+		alignment: "center",
+		head: "off",
 	},
 
 	// Define start sequence.
@@ -43,11 +44,15 @@ Module.register("MMM-ShairportMetadata",{
 		var wrapper = document.createElement("div");
 		wrapper.className = this.config.classes ? this.config.classes : "small";
 		alignment = (this.config.alignment == "left") ? "left" : ((this.config.alignment == "right") ? "right" : "center");
-		wrapper.setAttribute("style", "text-align:" + alignment + ";")
+		wrapper.setAttribute("style", "text-align:" + alignment + ";width:200px")
+		this.config.head = "off";
 		
 		if (!this.metadata || (Object.keys(this.metadata).length == 0)){
-			wrapper.setAttribute("style", "display:none;");
+			wrapper.setAttribute("style", "display:none;width:200px;");
 			return wrapper;
+			this.config.head = "off";
+		} else {
+			this.config.head = "on";
 		}
 		
 		metadata = document.createElement("div");
@@ -90,5 +95,12 @@ Module.register("MMM-ShairportMetadata",{
 
 		return wrapper;
 	},
-
+	getHeader: function() {
+		if (this.config.head == "on") { 
+			return this.data.header + "Now Playing - AirPlay";
+		} 
+		if (this.config.head == "off") {
+			return this.data.header - "Now Playing - AirPlay";
+		} 
+	},
 });
